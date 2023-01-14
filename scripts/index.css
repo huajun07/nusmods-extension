@@ -1,0 +1,11 @@
+.timetable-cell {
+	position: relative;
+}
+
+.toggle-button {
+	position: absolute;
+	right: 4px;
+	top: 4px;
+	background-color: red;
+	z-index: 100;
+}
