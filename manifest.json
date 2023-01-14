@@ -11,5 +11,8 @@
         "https://developer.chrome.com/docs/webstore/*"
       ]
     }
+  ],
+  "host_permissions": [
+    "https://nusmods.com/"
   ]
 }
