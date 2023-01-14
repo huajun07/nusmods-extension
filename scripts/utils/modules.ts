@@ -5,6 +5,7 @@ type ModuleData = {
 }
 
 type SemData = {
+	semester: number
     timetable: TimeData[]
 }
 
@@ -31,7 +32,12 @@ export type ModuleLesson = {
 
 export const fetchModule = async (moduleCode: string, semester: number): Promise<TimeData[]> => {
     const result: ModuleData = (await axios.get(`https://api.nusmods.com/v2/2022-2023/modules/${moduleCode}.json`)).data
-    return result.semesterData[semester - 1].timetable
+	for (const semData of result.semesterData) {
+		if (semData.semester == semester) {
+			return semData.timetable
+		}
+	}
+	return []
 }
 
 export const filterModule = async (moduleCode: string, semester: number): Promise<ModuleLesson[]> => {
@@ -59,7 +65,7 @@ export const filterModule = async (moduleCode: string, semester: number): Promis
 
         for (const i of weeks) {
             for (let j = startT; j < endT; j++) {
-                const norm: number = j + dayNum * 5 + i * 35;
+                const norm: number = j + dayNum * 14  + (i - 1) * 70;
                 if (!moduleClasses.classes.has(lessonType)) {
                     moduleClasses.classes.set(lessonType, new Map<string, number[]>())
                 }
@@ -100,4 +106,68 @@ export const filterModule = async (moduleCode: string, semester: number): Promis
     }
 
     return moduleLessons
+}
+
+export const LESSON_TYPE_ABBREV = {
+	'Design Lecture': 'DLEC',
+	Laboratory: 'LAB',
+	Lecture: 'LEC',
+	'Packaged Lecture': 'PLEC',
+	'Packaged Tutorial': 'PTUT',
+	Recitation: 'REC',
+	'Sectional Teaching': 'SEC',
+	'Seminar-Style Module Class': 'SEM',
+	Tutorial: 'TUT',
+	'Tutorial Type 2': 'TUT2',
+	'Tutorial Type 3': 'TUT3',
+	Workshop: 'WS',
+}
+type LessonType = keyof typeof LESSON_TYPE_ABBREV
+
+export type ModuleConfig = {
+	[name: string]: {
+		[key in LessonType]: {
+			config: LessonConfig
+			classNo: string
+		}
+	}
+}
+
+export enum LessonConfig {
+	Normal,
+	Hidden,
+	Fixed,
+}
+
+export function getCurrentSem(): number {
+	const currentSemName = window.location.pathname.split('/').pop() as string
+	return {
+		'sem-1': 1,
+		'sem-2': 2,
+		'st-i': 3,
+		'st-ii': 4,
+	}[currentSemName] as number
+}
+
+export function getCurrentSemModules(): {
+	[name: string]: {
+		[key in LessonType]: string
+	}
+} {
+	const currentTimetable = JSON.parse(localStorage.getItem('persist:timetables') as string)
+	const currentClasses = JSON.parse(currentTimetable.lessons as string)[getCurrentSem()]
+	return currentClasses
+}
+
+export function getCurrentSemConfig(): ModuleConfig {
+	const moduleConfig = JSON.parse(localStorage.getItem('persist:moduleConfigs') ?? '{}')[
+		getCurrentSem()
+	] as ModuleConfig
+	return moduleConfig ?? {}
+}
+
+export function setCurrentSemConfig(value: ModuleConfig) {
+	let config = JSON.parse(localStorage.getItem('persist:moduleConfigs') ?? '{}')
+	config[getCurrentSem()] = value
+	localStorage.setItem('persist:moduleConfigs', JSON.stringify(config))
 }
