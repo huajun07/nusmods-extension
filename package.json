@@ -28,12 +28,7 @@
 		"webpack-cli": "^5.0.1"
 	},
 	"dependencies": {
-<<<<<<< HEAD
-		"@reduxjs/toolkit": "^1.9.1",
-		"axios": "^1.2.2"
-=======
 		"axios": "^1.2.2",
 		"node-html-parser": "^6.1.4"
->>>>>>> c44cd78 (feat: extract shared timetable)
 	}
 }
