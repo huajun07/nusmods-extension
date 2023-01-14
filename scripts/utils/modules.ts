@@ -128,7 +128,13 @@ export const LESSON_TYPE_ABBREV = {
 	Workshop: 'WS',
 }
 type LessonType = keyof typeof LESSON_TYPE_ABBREV
-type LessonAbbrev = typeof LESSON_TYPE_ABBREV[keyof typeof LESSON_TYPE_ABBREV]
+type LessonAbbrev = (typeof LESSON_TYPE_ABBREV)[keyof typeof LESSON_TYPE_ABBREV]
+export function lessonTypeAbbrevToFull(abbrv: LessonAbbrev) {
+	for (const full in LESSON_TYPE_ABBREV) {
+		if (LESSON_TYPE_ABBREV[full] === abbrv) return full
+	}
+	return ''
+}
 
 type Modules = {
 	[name: string]: Partial<Record<LessonType, string>>
