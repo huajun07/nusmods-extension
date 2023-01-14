@@ -1,4 +1,6 @@
-import hiddenIcon from './assets/hidden_icon.svg'
+import hiddenIcon from './assets/hidden_icon.png'
+import fixedIcon from './assets/fixed_icon.png'
+import normalIcon from './assets/normal_icon.png'
 import './index.css'
 import {
 	LessonConfig,
@@ -34,7 +36,6 @@ function updateClassConfig(name: string, typ: string, newValue: LessonConfig) {
 	if (!(name in config)) return
 	config[name][typ] = newValue
 	setCurrentSemConfig(config)
-	augmentTimetable()
 }
 
 export function augmentTimetable() {
@@ -82,13 +83,23 @@ export function augmentTimetable() {
 		}
 		button.className = 'toggle-button'
 
+		const icon = {
+			[LessonConfig.Normal]: normalIcon,
+			[LessonConfig.Fixed]: fixedIcon,
+			[LessonConfig.Hidden]: hiddenIcon,
+		}[config[name][lessonType]]
 		if (button.children.length === 0) {
-			const icon = {
-				[LessonConfig.Normal]: hiddenIcon,
-				[LessonConfig.Fixed]: hiddenIcon,
-				[LessonConfig.Hidden]: hiddenIcon,
-			}[config[name][lessonType]]
-			button.innerHTML = `<svg height="28px" width="28px" src=${icon} />`
+			const iconImg = document.createElement('img')
+			iconImg.src = icon
+			button.appendChild(iconImg)
+		} else {
+			;(button.children[0] as HTMLImageElement).src = icon
+		}
+
+		if (config[name][lessonType] === LessonConfig.Hidden) {
+			;(cell as HTMLDivElement).style.opacity = '0.5'
+		} else {
+			;(cell as HTMLDivElement).style.opacity = '1'
 		}
 
 		button.onclick = (evt) => {
@@ -105,4 +116,4 @@ export function augmentTimetable() {
 	// add free blocks
 }
 
-setInterval(() => augmentTimetable(), 30)
+setInterval(() => augmentTimetable(), 60)
