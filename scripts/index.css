@@ -29,6 +29,14 @@ iframe {
 	border: none;
 }
 
-#schedule {
-	padding-left: 4rem;
+@media (min-width: 768px) {
+	#schedule {
+		padding-left: 4rem;
+	}
+}
+
+@media (min-width: 1200px) {
+	#schedule {
+		padding-left: 10rem;
+	}
 }
