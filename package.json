@@ -32,11 +32,10 @@
 	},
 	"dependencies": {
 		"@chakra-ui/react": "^2.4.8",
+		"@nextui-org/react": "^1.0.0-beta.12",
 		"axios": "^1.2.2",
 		"node-html-parser": "^6.1.4",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"semantic-ui-css": "^2.5.0",
-		"semantic-ui-react": "^2.1.4"
+		"react-dom": "^18.2.0"
 	}
 }

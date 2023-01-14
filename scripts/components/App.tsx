@@ -4,7 +4,7 @@ import { ClassSlot, giveSchedule } from '../schedule'
 import { resize } from '../utils/iframe'
 import { generateUrl } from '../utils/url'
 import { lessonTypeAbbrevToFull } from '../utils/modules'
-import { Pagination, PaginationProps } from 'semantic-ui-react'
+import { Pagination } from '@nextui-org/react'
 
 var schedules: ClassSlot[][] = []
 
@@ -18,13 +18,6 @@ export default function App() {
 		if (schedules.length > 0) {
 			displayTimetable(1)
 		}
-	}
-
-	const onChange = (
-		_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-		data: PaginationProps
-	) => {
-		displayTimetable(data.activePage as number)
 	}
 
 	const displayTimetable = (idx: number) => {
@@ -74,13 +67,11 @@ export default function App() {
 			<Center>
 				{total > 0 ? (
 					<Pagination
-						defaultActivePage={1}
-						firstItem={null}
-						lastItem={null}
-						pointing
-						secondary
-						totalPages={total}
-						onPageChange={onChange}
+						initialPage={1}
+						total={total}
+						siblings={3}
+						onChange={displayTimetable}
+						page={cur}
 					/>
 				) : null}
 			</Center>

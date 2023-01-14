@@ -3,7 +3,6 @@ import React from 'react'
 import App from './components/App'
 import { ChakraProvider } from '@chakra-ui/react'
 import { setCurrentSemModules } from './utils/modules'
-import 'semantic-ui-css/semantic.min.css'
 
 export function initalizeDashboard() {
 	window.addEventListener('message', (event) => {
