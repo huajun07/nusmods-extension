@@ -17,8 +17,8 @@ export default function App() {
 		}
 		const iframe = document.createElement('iframe')
 		iframe.onload = resize
-		console.log(generateUrl(schedules[0], 0))
-		iframe.src = generateUrl(schedules[0], 0)
+		console.log(generateUrl(schedules[0]))
+		iframe.src = generateUrl(schedules[0])
 		div?.appendChild(iframe)
 	}
 	return (
