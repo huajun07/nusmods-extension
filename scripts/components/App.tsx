@@ -35,8 +35,7 @@ export default function App() {
 	}
 
 	const syncMods = async () => {
-		const schedules = await giveSchedule()
-		const schedule = schedules[0]
+		const schedule = schedules[cur - 1]
 		let modules = {}
 		for (const lesson of schedule) {
 			const { moduleCode, lessonType, classNo } = lesson

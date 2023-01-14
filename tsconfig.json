@@ -6,7 +6,7 @@
 	"compilerOptions": {
 		/* Basic Options */
 		"target": "es6" /* Has to be es6 for sequelize models to work: https://github.com/sequelize/sequelize/issues/7840#issuecomment-317212324 */,
-		"module": "commonjs" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
+		"module": "es2015" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
 		"sourceMap": true /* Generates corresponding '.map' file. */,
 		"outDir": "./build" /* Redirect output structure to the directory. */,
 		"rootDir": "../" /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */,
