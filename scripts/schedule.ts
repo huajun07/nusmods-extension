@@ -157,4 +157,6 @@ export function insertClass(
 	}
 }
 
+export {ClassSlot}
+
 //# sourceMappingURL=/build/schedule.js.map

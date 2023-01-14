@@ -1,16 +1,34 @@
 import React, { useState } from 'react'
 import { Box, Center, Flex, Spacer } from '@chakra-ui/react'
-import { giveSchedule } from '../schedule'
+import { ClassSlot, giveSchedule } from '../schedule'
 import { resize } from '../utils/iframe'
 import { generateUrl } from '../utils/url'
-import { lessonTypeAbbrevToFull, setCurrentSemModules } from '../utils/modules'
+import { lessonTypeAbbrevToFull } from '../utils/modules'
+import { Pagination, PaginationProps } from 'semantic-ui-react'
+
+var schedules: ClassSlot[][] = []
 
 export default function App() {
-	const [message, setMessage] = useState('')
+	const [total, setTotal] = useState(-1)
+	const [cur, setCur] = useState(0)
 
 	const scheduleMods = async () => {
-		const schedules = await giveSchedule()
-		setMessage(`${schedules.length} Optimal Schedules were found`)
+		schedules = await giveSchedule()
+		setTotal(schedules.length)
+		if (schedules.length > 0) {
+			displayTimetable(1)
+		}
+	}
+
+	const onChange = (
+		_event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+		data: PaginationProps
+	) => {
+		displayTimetable(data.activePage as number)
+	}
+
+	const displayTimetable = (idx: number) => {
+		setCur(idx)
 		const div = document.getElementById('schedule-results')
 		const iframes = div?.getElementsByTagName('iframe') || []
 		for (const iframe of iframes) {
@@ -18,10 +36,11 @@ export default function App() {
 		}
 		const iframe = document.createElement('iframe')
 		iframe.onload = resize
-		console.log(generateUrl(schedules[0]))
-		iframe.src = generateUrl(schedules[0])
+		console.log(generateUrl(schedules[idx - 1]))
+		iframe.src = generateUrl(schedules[idx - 1])
 		div?.appendChild(iframe)
 	}
+
 	const syncMods = async () => {
 		const schedules = await giveSchedule()
 		const schedule = schedules[0]
@@ -34,22 +53,37 @@ export default function App() {
 		window.postMessage(JSON.stringify({ message: 'syncTimetable', modules }))
 	}
 	return (
-		<Flex padding="10" width="100%">
-			<Box>
-				<button className="btn-outline-success btn btn-svg" onClick={() => scheduleMods()}>
-					Optimise Timetable
-				</button>
-			</Box>
-			<Spacer />
-			<Center>{message}</Center>
-			<Spacer />
-			<Box>
-				{message ? (
-					<button className="btn-outline-primary btn btn-svg" onClick={() => syncMods()}>
-						Sync With Timetable
+		<Flex flexDirection="column">
+			<Flex padding="10" width="100%">
+				<Box>
+					<button className="btn-outline-success btn btn-svg" onClick={() => scheduleMods()}>
+						Optimise Timetable
 					</button>
+				</Box>
+				<Spacer />
+				<Center>{total != -1 ? `${total} Optimal Schedules were found` : ''}</Center>
+				<Spacer />
+				<Box>
+					{total > 0 ? (
+						<button className="btn-outline-primary btn btn-svg" onClick={() => syncMods()}>
+							Sync With Timetable
+						</button>
+					) : null}
+				</Box>
+			</Flex>
+			<Center>
+				{total > 0 ? (
+					<Pagination
+						defaultActivePage={1}
+						firstItem={null}
+						lastItem={null}
+						pointing
+						secondary
+						totalPages={total}
+						onPageChange={onChange}
+					/>
 				) : null}
-			</Box>
+			</Center>
 		</Flex>
 	)
 }
