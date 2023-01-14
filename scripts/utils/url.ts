@@ -1,3 +1,5 @@
+import { getCurrentSem } from "./modules"
+
 interface Classes {
     lessonType: string
     classNo: string
@@ -10,8 +12,9 @@ interface ClassSlot extends Classes {
 
 const semesters = ['sem-1', 'sem-2', 'st-i', 'st-ii']
 
-export const generateUrl = (sessions: ClassSlot[], semester: number): string =>{
-    let url = `https://nusmods.com/timetable/${semesters[semester]}/share?`
+export const generateUrl = (sessions: ClassSlot[]): string =>{
+	const semNum: number = getCurrentSem()
+    let url = `https://nusmods.com/timetable/${semesters[semNum-1]}/share?`
     const modules: string[] = []
     const classes: Classes[][] = []
     for(const session of sessions){
