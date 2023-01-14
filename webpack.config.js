@@ -10,7 +10,7 @@ module.exports = {
 		filename: '[name].js',
 	},
 	resolve: {
-		extensions: ['.ts', '.js'],
+		extensions: ['.ts', '.js', '.tsx', '.jsx'],
 	},
 	module: {
 		rules: [
@@ -24,7 +24,7 @@ module.exports = {
 				use: ['style-loader', 'css-loader'],
 			},
 			{
-				test: /\.svg$/,
+				test: /\.png$/,
 				type: 'asset/inline',
 			},
 		],
