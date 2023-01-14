@@ -96,7 +96,7 @@ export function getCurrentSemConfig(): ModuleConfig {
 	const moduleConfig = JSON.parse(localStorage.getItem('persist:moduleConfigs') ?? '{}')[
 		getCurrentSem()
 	] as ModuleConfig
-	return moduleConfig
+	return moduleConfig ?? {}
 }
 
 export function setCurrentSemConfig(value: ModuleConfig) {

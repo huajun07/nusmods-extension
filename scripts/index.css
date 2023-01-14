@@ -8,4 +8,11 @@
 	top: 4px;
 	background-color: red;
 	z-index: 100;
+	display: block;
+	height: 32px;
+	width: 32px;
+	padding: 0px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }

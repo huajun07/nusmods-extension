@@ -1,10 +1,11 @@
+import hiddenIcon from './assets/hidden_icon.svg'
 import './index.css'
 import {
 	LessonConfig,
 	getCurrentSemConfig,
 	getCurrentSemModules,
 	setCurrentSemConfig,
-} from './utils'
+} from './utils/modules'
 
 const LESSON_TYPE_ABBREV = {
 	'Design Lecture': 'DLEC',
@@ -63,7 +64,6 @@ export function augmentTimetable() {
 		return { name: 'error', lessonType: 'error', classNo: 'error' }
 	}
 	for (const cell of cells) {
-		if (cell.tagName !== 'BUTTON') continue
 		const modules = getCurrentSemModules()
 		const { name, lessonType, classNo } = getClassDetails(cell)
 		if (modules[name][lessonType] !== classNo) {
@@ -80,8 +80,17 @@ export function augmentTimetable() {
 			button = document.createElement('button')
 			cell.appendChild(button)
 		}
-		button.innerHTML = config[name][lessonType]
 		button.className = 'toggle-button'
+
+		if (button.children.length === 0) {
+			const icon = {
+				[LessonConfig.Normal]: hiddenIcon,
+				[LessonConfig.Fixed]: hiddenIcon,
+				[LessonConfig.Hidden]: hiddenIcon,
+			}[config[name][lessonType]]
+			button.innerHTML = `<svg height="28px" width="28px" src=${icon} />`
+		}
+
 		button.onclick = (evt) => {
 			if (config[name][lessonType] === LessonConfig.Normal)
 				updateClassConfig(name, lessonType, LessonConfig.Fixed)
