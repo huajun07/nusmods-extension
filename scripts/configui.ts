@@ -4,7 +4,10 @@ import normalIcon from './assets/normal_icon.png'
 import './index.css'
 import {
 	LessonConfig,
+	addFillerModuleToList,
+	addFillerModuleToTimetable,
 	getCurrentSemConfig,
+	getCurrentSemConfigForScheduling,
 	getCurrentSemModules,
 	setCurrentSemConfig,
 } from './utils/modules'
@@ -39,6 +42,9 @@ function updateClassConfig(name: string, typ: string, newValue: LessonConfig) {
 }
 
 export function augmentTimetable() {
+	addFillerModuleToList()
+	addFillerModuleToTimetable()
+	getCurrentSemConfigForScheduling()
 	const currentModules = getCurrentSemModules()
 	let oldConfig = getCurrentSemConfig()
 	let config = {}
@@ -116,4 +122,4 @@ export function augmentTimetable() {
 	// add free blocks
 }
 
-setInterval(() => augmentTimetable(), 60)
+setInterval(() => augmentTimetable(), 200)
