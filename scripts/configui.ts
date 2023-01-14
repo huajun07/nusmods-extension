@@ -104,8 +104,14 @@ export function augmentTimetable() {
 
 		if (config[name][lessonType] === LessonConfig.Hidden) {
 			;(cell as HTMLDivElement).style.opacity = '0.5'
-		} else {
+		} else{
 			;(cell as HTMLDivElement).style.opacity = '1'
+		}
+
+		if (config[name][lessonType] === LessonConfig.Fixed) {
+			;(cell as HTMLDivElement).style.filter = 'brightness(85%)'
+		} else{
+			;(cell as HTMLDivElement).style.filter = 'brightness(100%)'
 		}
 
 		button.onclick = (evt) => {
