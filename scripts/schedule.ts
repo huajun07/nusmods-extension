@@ -1,9 +1,9 @@
 import { filterModule, ModuleLesson } from "./utils/modules";
 import { getCurrentSem, getCurrentSemConfig, LessonConfig, LESSON_TYPE_ABBREV, ModuleConfig } from "./utils/modules";
 
-const taken: boolean[] = Array(910).fill(false)
-const hidden: boolean[] = Array(910).fill(false)
-const blocked: boolean[] = Array(910).fill(false) // TODO: get from AJ
+var taken: boolean[] = Array(910).fill(false)
+var hidden: boolean[] = Array(910).fill(false)
+var blocked: boolean[] = Array(910).fill(false) // TODO: get from AJ
 
 type ClassSlot = {
     moduleCode: string
@@ -12,6 +12,8 @@ type ClassSlot = {
 }
 
 const moduleConfig: ModuleConfig = getCurrentSemConfig()
+console.log(moduleConfig)
+
 var classes: ModuleLesson[] = []
 var optTime: number[] = [300, 300]
 var possibleSchedules: ClassSlot[][] = []
@@ -29,6 +31,8 @@ export const giveSchedule = async (): Promise<ClassSlot[][]> => {
     classes.sort((a, b) => a.timings.size - b.timings.size)
     schedule(0)
 
+    console.log(optTime)
+
     return possibleSchedules
 }
 
@@ -40,8 +44,10 @@ export const schedule = (idx: number) => {
     const lessonType: string = classes[idx].lessonType
     const abbrev: string = LESSON_TYPE_ABBREV[lessonType]
     const timings: Map<string, number[]> = classes[idx].timings
+    console.log(moduleCode, lessonType)
+    console.log(moduleConfig[moduleCode][lessonType])
 
-    const config: LessonConfig = moduleConfig[moduleCode][lessonType].config
+    const config: LessonConfig = moduleConfig[moduleCode][lessonType]
 
     if (config === LessonConfig.Fixed) {
         const classNo: string = moduleConfig[moduleCode][lessonType].classNo
@@ -67,9 +73,9 @@ export function computeTime(): number[] {
         for (let j = 0; j < 14; j++) {
             const time: number = j + i * 14
             if (taken[time]) {
-                latest = time
+                latest = j
                 if (earliest === 30) {
-                    earliest = time
+                    earliest = j
                 }
             }
             if (latest != -1) {
@@ -79,6 +85,7 @@ export function computeTime(): number[] {
         }
     }
 
+    console.log(dayCount, totalTime)
     const ans: number[] = [dayCount, totalTime]
     return ans
 }
@@ -105,6 +112,7 @@ export function insertClass(idx: number, moduleCode: string, lessonType: string,
     if (noClash) {
         for (const time of times) {
             if (!isHidden) {
+                console.log("hi")
                 taken[time] = true
             } else {
                 hidden[time] = true
@@ -115,10 +123,8 @@ export function insertClass(idx: number, moduleCode: string, lessonType: string,
             lessonType: lessonType,
             classNo: classNo
         }
-        console.log(idx,newSlot)
-        slots.push(newSlot)
-        console.log(JSON.stringify(slots))
 
+        slots.push(newSlot)
         if (idx == classes.length - 1) {
             const computedTime: number[] = computeTime()
             const dayCount: number = computedTime[0]
@@ -127,8 +133,8 @@ export function insertClass(idx: number, moduleCode: string, lessonType: string,
                 clearSchedule()
                 possibleSchedules.push(slots)
                 optTime = computedTime
+
             } else if (dayCount === optTime[0] && totalTime === optTime[1]) {
-                // console.log(slots)
                 possibleSchedules.push(slots)
             }
         } else {
