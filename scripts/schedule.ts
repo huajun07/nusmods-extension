@@ -94,7 +94,6 @@ export function computeTime(): number[] {
 	return ans
 }
 
-
 export function insertClass(
 	idx: number,
 	moduleCode: string,
@@ -144,7 +143,12 @@ export function insertClass(
 				possibleSchedules.push([...slots])
 			}
 		} else {
-			schedule(idx + 1)
+			const computedTime: number[] = computeTime()
+			const dayCount: number = computedTime[0]
+			const totalTime: number = computedTime[1]
+			if (dayCount < optTime[0] || (dayCount === optTime[0] && totalTime <= optTime[1])) {
+				schedule(idx + 1)
+			}
 		}
 		for (const time of times) {
 			if (!isHidden) {
