@@ -10,6 +10,10 @@ loadTimeTable(
 )
 console.log(filterModule('GEA1000', 2))
 augmentTimetable()
+const func = async() =>{
+    console.log((await giveSchedule())[0])
+}
+func()
 console.log(giveSchedule())
 
 initalizeDashboard()

@@ -1,4 +1,4 @@
-import { filterModule, ModuleLesson } from './utils/modules'
+import { filterModule, getCurrentSemConfigForScheduling, ModuleLesson } from './utils/modules'
 import {
 	getCurrentSem,
 	getCurrentSemConfig,
@@ -17,7 +17,7 @@ type ClassSlot = {
 	classNo: string
 }
 
-const moduleConfig: ModuleConfig = getCurrentSemConfig()
+const moduleConfig: ModuleConfig = getCurrentSemConfigForScheduling()
 console.log(moduleConfig)
 
 var classes: ModuleLesson[] = []
@@ -28,9 +28,7 @@ var slots: ClassSlot[] = []
 // Call this to get the schedules
 export const giveSchedule = async (): Promise<ClassSlot[][]> => {
 	const semNum: number = getCurrentSem()
-	// console.log(semNum)
 	for (const moduleCode in moduleConfig) {
-		// console.log(moduleCode)
 		const moduleLessons: ModuleLesson[] = await filterModule(moduleCode, semNum)
 		for (const lessons of moduleLessons) {
 			classes.push(lessons)
@@ -51,25 +49,21 @@ export const schedule = (idx: number) => {
 	const abbrev: string = LESSON_TYPE_ABBREV[lessonType]
 	const timings: Map<string, number[]> = classes[idx].timings
 
-	const config: LessonConfig = moduleConfig[moduleCode][lessonType]
+	const config: LessonConfig = moduleConfig[moduleCode][lessonType].config
 
-	for ([tempClassNo, times] of timings) {
-		insertClass(idx, moduleCode, abbrev, tempClassNo, false)
+	if (config === LessonConfig.Fixed) {
+		const classNo: string = moduleConfig[moduleCode][lessonType].classNo
+		times = timings.get(classNo) || []
+		insertClass(idx, moduleCode, abbrev, classNo, false)
+	} else if (config === LessonConfig.Normal) {
+		for ([tempClassNo, times] of timings) {
+			insertClass(idx, moduleCode, abbrev, tempClassNo, false)
+		}
+	} else {
+		for ([tempClassNo, times] of timings) {
+			insertClass(idx, moduleCode, abbrev, tempClassNo, true)
+		}
 	}
-
-	// if (config === LessonConfig.Fixed) {
-	// 	const classNo: string = moduleConfig[moduleCode][lessonType].classNo
-	// 	times = timings.get(classNo) || []
-	// 	insertClass(idx, moduleCode, abbrev, classNo, false)
-	// } else if (config === LessonConfig.Normal) {
-	// 	for ([tempClassNo, times] of timings) {
-	// 		insertClass(idx, moduleCode, abbrev, tempClassNo, false)
-	// 	}
-	// } else {
-	// 	for ([tempClassNo, times] of timings) {
-	// 		insertClass(idx, moduleCode, abbrev, tempClassNo, true)
-	// 	}
-	// }
 }
 
 export function computeTime(): number[] {
@@ -92,8 +86,6 @@ export function computeTime(): number[] {
 			totalTime += latest - earliest + 1
 		}
 	}
-
-	console.log(dayCount, totalTime)
 
 	const ans: number[] = [dayCount, totalTime]
 	return ans
@@ -145,7 +137,6 @@ export function insertClass(
 			const totalTime: number = computedTime[1]
 			if (dayCount < optTime[0] || (dayCount === optTime[0] && totalTime < optTime[1])) {
 				clearSchedule()
-				console.log(slots)
 				possibleSchedules.push(slots)
 				optTime = computedTime
 			} else if (dayCount === optTime[0] && totalTime === optTime[1]) {
@@ -164,3 +155,5 @@ export function insertClass(
 		slots.pop()
 	}
 }
+
+//# sourceMappingURL=/build/schedule.js.map
