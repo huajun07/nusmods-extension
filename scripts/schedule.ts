@@ -17,8 +17,7 @@ type ClassSlot = {
 	classNo: string
 }
 
-const moduleConfig: ModuleConfig = getCurrentSemConfigForScheduling()
-console.log(moduleConfig)
+var moduleConfig: ModuleConfig = getCurrentSemConfigForScheduling()
 
 var classes: ModuleLesson[] = []
 var optTime: number[] = [300, 300]
@@ -27,6 +26,12 @@ var slots: ClassSlot[] = []
 
 // Call this to get the schedules
 export const giveSchedule = async (): Promise<ClassSlot[][]> => {
+	moduleConfig = getCurrentSemConfigForScheduling()
+	possibleSchedules = []
+	optTime = [300, 300]
+	classes = []
+	slots = []
+
 	const semNum: number = getCurrentSem()
 	for (const moduleCode in moduleConfig) {
 		const moduleLessons: ModuleLesson[] = await filterModule(moduleCode, semNum)
@@ -35,15 +40,11 @@ export const giveSchedule = async (): Promise<ClassSlot[][]> => {
 		}
 	}
 	classes.sort((a, b) => a.timings.size - b.timings.size)
-	console.log(classes)
 
 	schedule(0)
 
 	return possibleSchedules
 }
-
-var times: number[] = []
-var tempClassNo: string
 
 export const schedule = (idx: number) => {
 	const moduleCode: string = classes[idx].moduleCode
@@ -55,16 +56,15 @@ export const schedule = (idx: number) => {
 
 	if (config === LessonConfig.Fixed) {
 		const classNo: string = moduleConfig[moduleCode][lessonType].classNo
-		times = timings.get(classNo) || []
-		insertClass(idx, moduleCode, abbrev, classNo, false)
+		const times = timings.get(classNo) || []
+		insertClass(idx, moduleCode, abbrev, classNo, times, false)
 	} else if (config === LessonConfig.Normal) {
-		console.log(moduleCode)
-		for ([tempClassNo, times] of timings) {
-			insertClass(idx, moduleCode, abbrev, tempClassNo, false)
+		for (const [classNo, times] of timings) {
+			insertClass(idx, moduleCode, abbrev, classNo, times, false)
 		}
 	} else {
-		for ([tempClassNo, times] of timings) {
-			insertClass(idx, moduleCode, abbrev, tempClassNo, true)
+		for (const [classNo, times] of timings) {
+			insertClass(idx, moduleCode, abbrev, classNo, times, true)
 		}
 	}
 }
@@ -94,18 +94,16 @@ export function computeTime(): number[] {
 	return ans
 }
 
-export function clearSchedule(): void {
-	possibleSchedules = []
-}
 
 export function insertClass(
 	idx: number,
 	moduleCode: string,
 	lessonType: string,
 	classNo: string,
+	times: number[],
 	isHidden: boolean
 ): void {
-	var noClash: boolean = true
+	let noClash: boolean = true
 	for (const time of times) {
 		if (!isHidden) {
 			if (taken[time] || blocked[time] || hidden[time]) {
@@ -139,7 +137,7 @@ export function insertClass(
 			const dayCount: number = computedTime[0]
 			const totalTime: number = computedTime[1]
 			if (dayCount < optTime[0] || (dayCount === optTime[0] && totalTime < optTime[1])) {
-				clearSchedule()
+				possibleSchedules = []
 				possibleSchedules.push([...slots])
 				optTime = computedTime
 			} else if (dayCount === optTime[0] && totalTime === optTime[1]) {

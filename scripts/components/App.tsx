@@ -9,6 +9,7 @@ export default function App() {
 
 	const scheduleMods = async () => {
 		const schedules = await giveSchedule()
+		console.log(schedules)
 		setMessage(`${schedules.length} Optimal Schedules were found`)
 		const div = document.getElementById('schedule-results')
 		const iframes = div?.getElementsByTagName('iframe') || []
