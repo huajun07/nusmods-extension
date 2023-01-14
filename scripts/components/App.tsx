@@ -1,15 +1,25 @@
 import React, { useState } from 'react'
 import { Box, Center, Flex, Spacer } from '@chakra-ui/react'
 import { giveSchedule } from '../schedule'
+import { resize } from '../utils/iframe'
+import { generateUrl } from '../utils/url'
 
 export default function App() {
 	const [message, setMessage] = useState('')
 
 	const scheduleMods = async () => {
 		const schedules = await giveSchedule()
-		console.log(schedules[0])
-		const schedules1 = [1, 2, 3, 4]
-		setMessage(`${schedules1.length} Optimal Schedules were found`)
+		setMessage(`${schedules.length} Optimal Schedules were found`)
+		const div = document.getElementById('schedule-results')
+		const iframes = div?.getElementsByTagName('iframe') || []
+		for (const iframe of iframes) {
+			iframe.remove()
+		}
+		const iframe = document.createElement('iframe')
+		iframe.onload = resize
+		console.log(generateUrl(schedules[0], 0))
+		iframe.src = generateUrl(schedules[0], 0)
+		div?.appendChild(iframe)
 	}
 	return (
 		<Flex padding="10" width="100%">
