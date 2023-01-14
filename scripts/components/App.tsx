@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { Box, Center, Flex, Spacer } from '@chakra-ui/react'
+import { Box, Center, Flex, Spacer, Spinner } from '@chakra-ui/react'
 import { ClassSlot, giveSchedule } from '../schedule'
-import { resize } from '../utils/iframe'
+import { resizeIFrameToFitContent } from '../utils/iframe'
 import { generateUrl } from '../utils/url'
 import { lessonTypeAbbrevToFull } from '../utils/modules'
 import { Pagination } from '@nextui-org/react'
@@ -23,12 +23,17 @@ export default function App() {
 	const displayTimetable = (idx: number) => {
 		setCur(idx)
 		const div = document.getElementById('schedule-results')
-		const iframes = div?.getElementsByTagName('iframe') || []
-		for (const iframe of iframes) {
-			iframe.remove()
+		function onLoad(this: GlobalEventHandlers, ev: Event) {
+			resizeIFrameToFitContent(ev.target as HTMLIFrameElement)
+			const iframes = div?.getElementsByTagName('iframe') || []
+			for (let i = 0; i < iframes.length - 1; i++) {
+				iframes[i].remove()
+			}
 		}
+
 		const iframe = document.createElement('iframe')
-		iframe.onload = resize
+		iframe.style.display = 'none'
+		iframe.onload = onLoad
 		console.log(generateUrl(schedules[idx - 1]))
 		iframe.src = generateUrl(schedules[idx - 1])
 		div?.appendChild(iframe)

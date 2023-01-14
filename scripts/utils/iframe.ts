@@ -1,9 +1,4 @@
-
-export function resize(this: GlobalEventHandlers, ev: Event) {
-	resizeIFrameToFitContent(ev.target as HTMLIFrameElement)
-}
-
-function resizeIFrameToFitContent(iFrame: HTMLIFrameElement) {
+export function resizeIFrameToFitContent(iFrame: HTMLIFrameElement) {
 	setTimeout(() => {
 		if (!iFrame.contentWindow) return
 		const document = iFrame.contentWindow.document
@@ -15,6 +10,7 @@ function resizeIFrameToFitContent(iFrame: HTMLIFrameElement) {
             return
         }
 		iFrame.contentWindow.document.body.innerHTML = content.innerHTML
+        iFrame.style.display = 'block'
 		iFrame.height = iFrame.contentWindow.document.body.scrollHeight.toString()
 		iFrame.width = iFrame.contentWindow.document.body.scrollWidth.toString()
 	}, 30)

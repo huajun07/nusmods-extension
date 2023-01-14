@@ -8,6 +8,5 @@ export const loadScheduler = () => {
 	child.appendChild(dashboard)
 	const results = document.createElement('div')
 	results.id = "schedule-results"
-	// results.onload = resize
 	child.appendChild(results)
 }
