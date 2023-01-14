@@ -10,7 +10,7 @@ interface ClassSlot extends Classes {
 
 const semesters = ['sem-1', 'sem-2', 'st-i', 'st-ii']
 
-const generateUrl = (sessions: ClassSlot[], semester: number): string =>{
+export const generateUrl = (sessions: ClassSlot[], semester: number): string =>{
     let url = `https://nusmods.com/timetable/${semesters[semester]}/share?`
     const modules: string[] = []
     const classes: Classes[][] = []

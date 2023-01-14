@@ -28,3 +28,7 @@ iframe {
 	width: 100%;
 	border: none;
 }
+
+#schedule {
+	padding-left: 4rem;
+}
