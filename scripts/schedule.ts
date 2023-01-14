@@ -35,6 +35,7 @@ export const giveSchedule = async (): Promise<ClassSlot[][]> => {
 		}
 	}
 	classes.sort((a, b) => a.timings.size - b.timings.size)
+
 	schedule(0)
 
 	return possibleSchedules
@@ -137,10 +138,10 @@ export function insertClass(
 			const totalTime: number = computedTime[1]
 			if (dayCount < optTime[0] || (dayCount === optTime[0] && totalTime < optTime[1])) {
 				clearSchedule()
-				possibleSchedules.push(slots)
+				possibleSchedules.push([...slots])
 				optTime = computedTime
 			} else if (dayCount === optTime[0] && totalTime === optTime[1]) {
-				possibleSchedules.push(slots)
+				possibleSchedules.push([...slots])
 			}
 		} else {
 			schedule(idx + 1)

@@ -128,6 +128,7 @@ export const LESSON_TYPE_ABBREV = {
 	Workshop: 'WS',
 }
 type LessonType = keyof typeof LESSON_TYPE_ABBREV
+type LessonAbbrev = typeof LESSON_TYPE_ABBREV[keyof typeof LESSON_TYPE_ABBREV]
 
 type Modules = {
 	[name: string]: Partial<Record<LessonType, string>>
