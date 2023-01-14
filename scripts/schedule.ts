@@ -1,4 +1,4 @@
-import { filterModule, ModuleLesson } from './utils/modules'
+import { filterModule, getCurrentSemConfigForScheduling, ModuleLesson } from './utils/modules'
 import {
 	getCurrentSem,
 	getCurrentSemConfig,
@@ -17,7 +17,7 @@ type ClassSlot = {
 	classNo: string
 }
 
-const moduleConfig: ModuleConfig = getCurrentSemConfig()
+let moduleConfig: ModuleConfig = getCurrentSemConfigForScheduling()
 var classes: ModuleLesson[] = []
 var optTime: number[] = [300, 300]
 var possibleSchedules: ClassSlot[][] = []
@@ -26,6 +26,7 @@ var slots: ClassSlot[] = []
 // Call this to get the schedules
 export const giveSchedule = async (): Promise<ClassSlot[][]> => {
 	const semNum: number = getCurrentSem()
+	moduleConfig = getCurrentSemConfigForScheduling()
 	for (const moduleCode in moduleConfig) {
 		const moduleLessons: ModuleLesson[] = await filterModule(moduleCode, semNum)
 		for (const lessons of moduleLessons) {
@@ -156,3 +157,5 @@ export function insertClass(
 		slots.pop()
 	}
 }
+
+//# sourceMappingURL=/build/schedule.js.map
