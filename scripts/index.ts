@@ -9,9 +9,8 @@ loadScheduler()
 console.log(filterModule('GEA1000', 2))
 augmentTimetable()
 const func = async() =>{
-    console.log((await giveSchedule())[0])
+    console.log((await giveSchedule()))
 }
 func()
-console.log(giveSchedule())
 
 initalizeDashboard()
