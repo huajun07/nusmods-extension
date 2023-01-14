@@ -35,6 +35,7 @@ export const giveSchedule = async (): Promise<ClassSlot[][]> => {
 		}
 	}
 	classes.sort((a, b) => a.timings.size - b.timings.size)
+	console.log(classes)
 
 	schedule(0)
 
@@ -57,6 +58,7 @@ export const schedule = (idx: number) => {
 		times = timings.get(classNo) || []
 		insertClass(idx, moduleCode, abbrev, classNo, false)
 	} else if (config === LessonConfig.Normal) {
+		console.log(moduleCode)
 		for ([tempClassNo, times] of timings) {
 			insertClass(idx, moduleCode, abbrev, tempClassNo, false)
 		}
