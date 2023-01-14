@@ -1,0 +1,16 @@
+{
+	"manifest_version": 3,
+	"name": "NUSMods Extension",
+	"version": "1.0",
+	"description": "Automatically generate timetables for you based on your preferences.",
+	"content_scripts": [
+		{
+			"js": ["index.js"],
+			"matches": [
+				"https://developer.chrome.com/docs/extensions/*",
+				"https://developer.chrome.com/docs/webstore/*"
+			]
+		}
+	],
+	"host_permissions": ["https://nusmods.com/"]
+}
