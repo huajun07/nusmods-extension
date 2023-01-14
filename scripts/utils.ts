@@ -66,37 +66,41 @@ type ModuleConfig = {
 	}
 }
 
-enum LessonConfig {
+export enum LessonConfig {
 	Normal,
 	Hidden,
 	Fixed,
 }
 
-function getCurrentSemModules() {
+function getCurrentSem(): number {
 	const currentSemName = window.location.pathname.split('/').pop() as string
-	const currentSem = {
+	return {
 		'sem-1': 1,
 		'sem-2': 2,
 		'st-i': 3,
 		'st-ii': 4,
 	}[currentSemName] as number
+}
 
+export function getCurrentSemModules(): {
+	[name: string]: {
+		[key in LessonType]: string
+	}
+} {
 	const currentTimetable = JSON.parse(localStorage.getItem('persist:timetables') as string)
-	const currentClasses = JSON.parse(currentTimetable.lessons as string)[currentSem]
+	const currentClasses = JSON.parse(currentTimetable.lessons as string)[getCurrentSem()]
 	return currentClasses
 }
 
-function getCurrentSemConfig(): ModuleConfig {
-	const currentSemName = window.location.pathname.split('/').pop() as string
-	const currentSem = {
-		'sem-1': 1,
-		'sem-2': 2,
-		'st-i': 3,
-		'st-ii': 4,
-	}[currentSemName] as number
-
-	const moduleConfig = JSON.parse(localStorage.getItem('persist:moduleConfigs') as string)[
-		currentSem
+export function getCurrentSemConfig(): ModuleConfig {
+	const moduleConfig = JSON.parse(localStorage.getItem('persist:moduleConfigs') ?? '{}')[
+		getCurrentSem()
 	] as ModuleConfig
 	return moduleConfig
+}
+
+export function setCurrentSemConfig(value: ModuleConfig) {
+	let config = JSON.parse(localStorage.getItem('persist:moduleConfigs') ?? '{}')
+	config[getCurrentSem()] = value
+	localStorage.setItem('persist:moduleConfigs', JSON.stringify(config))
 }
