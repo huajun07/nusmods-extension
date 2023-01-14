@@ -6,10 +6,7 @@
 	"content_scripts": [
 		{
 			"js": ["index.js"],
-			"matches": [
-				"https://developer.chrome.com/docs/extensions/*",
-				"https://developer.chrome.com/docs/webstore/*"
-			]
+			"matches": ["https://nusmods.com/timetable/*"]
 		}
 	],
 	"host_permissions": ["https://nusmods.com/"]
