@@ -49,3 +49,4 @@ At the time of writing this, the node version is `v19.3.0`
 
 - Blocking out certain timings
 - Sort optimal schedules accoriding to decreasing minimum vacancy for higher likelyhood of getting desired schedule
+- Using geographical data to add padding time for travelling to provide a more realistic schedule
