@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { Box, Center, Flex, Spacer, Spinner } from '@chakra-ui/react'
+import { Box, Button, Center, Flex, Spacer, Icon } from '@chakra-ui/react'
 import { ClassSlot, giveSchedule } from '../services/schedule'
 import { resizeIFrameToFitContent } from '../utils/iframe'
 import { generateUrl } from '../utils/url'
 import { lessonTypeAbbrevToFull } from '../utils/modules'
 import { Pagination } from '@nextui-org/react'
+import { FaRandom } from 'react-icons/fa'
 
 var schedules: ClassSlot[][] = []
 
@@ -39,6 +40,10 @@ export default function App() {
 		div?.appendChild(iframe)
 	}
 
+	const randomPage = () => {
+		displayTimetable(Math.ceil(Math.random() * total))
+	}
+
 	const syncMods = async () => {
 		const schedule = schedules[cur - 1]
 		let modules = {}
@@ -68,8 +73,8 @@ export default function App() {
 					) : null}
 				</Box>
 			</Flex>
-			<Center>
-				{total > 0 ? (
+			{total > 0 ? (
+				<Center>
 					<Pagination
 						initialPage={1}
 						total={total}
@@ -77,8 +82,14 @@ export default function App() {
 						onChange={displayTimetable}
 						page={cur}
 					/>
-				) : null}
-			</Center>
+					<Box paddingLeft="2em">
+						<button className="btn-outline-primary btn btn-svg" onClick={randomPage}>
+							<Icon as={FaRandom} />
+							<Box paddingLeft={2}>Random Select</Box>
+						</button>
+					</Box>
+				</Center>
+			) : null}
 		</Flex>
 	)
 }
