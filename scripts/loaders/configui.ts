@@ -6,6 +6,8 @@ import {
 	getCurrentSemConfig,
 	getCurrentSemModules,
 	setCurrentSemConfig,
+	setCurrentSemModules,
+	lessonTypeAbbrevToFull,
 } from '../utils/modules'
 
 const LESSON_TYPE_ABBREV = {
@@ -37,10 +39,39 @@ function updateClassConfig(name: string, typ: string, newValue: LessonConfig) {
 	setCurrentSemConfig(config)
 }
 
+function updateModulesWithTimetable() {
+	const lessons = document.getElementsByClassName('timetable-cell')
+	let modules = {}
+	for (const lesson of lessons) {
+		const name = lesson.children[0].children[0].innerHTML
+		const slot = lesson.children[0].children[1].innerHTML.split(' ')
+		const lessonType = lessonTypeAbbrevToFull(slot[0])
+		const classNo = slot[1].slice(1, slot[1].length - 1)
+		if (!(name in modules)) modules[name] = {}
+		modules[name][lessonType] = classNo
+	}
+	console.log('test', modules)
+	setCurrentSemModules(modules)
+}
+
+function handleUndoDelete() {
+	setTimeout(() => {
+		updateModulesWithTimetable()
+	})
+}
+
+function addUndoHandlerToButtons() {
+	const buttons = document.getElementsByTagName('button')
+	for (const button of buttons) {
+		if (button.innerHTML !== 'Undo') continue
+		// if the same function is added as an event listener multiple times,
+		// only one listener is kept
+		button.addEventListener('click', handleUndoDelete)
+	}
+}
+
 export function augmentTimetable() {
-	// addFillerModuleToList()
-	// addFillerModuleToTimetable()
-	// getCurrentSemConfigForScheduling()
+	addUndoHandlerToButtons()
 	const currentModules = getCurrentSemModules()
 	let oldConfig = getCurrentSemConfig()
 	let config = {}
@@ -100,13 +131,13 @@ export function augmentTimetable() {
 
 		if (config[name][lessonType] === LessonConfig.Hidden) {
 			;(cell as HTMLDivElement).style.opacity = '0.5'
-		} else{
+		} else {
 			;(cell as HTMLDivElement).style.opacity = '1'
 		}
 
 		if (config[name][lessonType] === LessonConfig.Fixed) {
 			;(cell as HTMLDivElement).style.filter = 'brightness(85%)'
-		} else{
+		} else {
 			;(cell as HTMLDivElement).style.filter = 'brightness(100%)'
 		}
 
