@@ -70,8 +70,26 @@ function addUndoHandlerToButtons() {
 	}
 }
 
+function addEditModeButton() {
+	const div = document.getElementsByClassName('page-container')[0].children[0]
+	if (div.children.length > 1) return
+	const editEnabled = JSON.parse(localStorage.getItem('persist:toggleEditMode') ?? 'true')
+	const wrapper = document.createElement('div')
+	div.appendChild(wrapper)
+	wrapper.className = 'edit-switch-wrapper'
+	wrapper.innerHTML = `<span>Toggle Edit: </span><label class="switch"><input type="checkbox" ${
+		editEnabled ? 'checked' : ''
+	} /><span class="slider" /></label>`
+	wrapper.children[1].addEventListener('input', (_) => {
+		const editEnabled = JSON.parse(localStorage.getItem('persist:toggleEditMode') ?? 'true')
+		localStorage.setItem('persist:toggleEditMode', JSON.stringify(!editEnabled))
+	})
+}
+
 export function augmentTimetable() {
 	addUndoHandlerToButtons()
+	addEditModeButton()
+	const showButtons = JSON.parse(localStorage.getItem('persist:toggleEditMode') ?? 'true')
 	const currentModules = getCurrentSemModules()
 	let oldConfig = getCurrentSemConfig()
 	let config = {}
@@ -101,6 +119,13 @@ export function augmentTimetable() {
 		const modules = getCurrentSemModules()
 		const { name, lessonType, classNo } = getClassDetails(cell)
 		if (modules[name][lessonType] !== classNo) {
+			if (cell.children.length >= 2 && cell.children[1].tagName === 'BUTTON') {
+				cell.removeChild(cell.children[1])
+			}
+			continue
+		}
+
+		if (!showButtons) {
 			if (cell.children.length >= 2 && cell.children[1].tagName === 'BUTTON') {
 				cell.removeChild(cell.children[1])
 			}
