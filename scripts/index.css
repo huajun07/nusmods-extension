@@ -24,6 +24,18 @@
 	width: 100%;
 }
 
+.toggle-button::after {
+	outline: none;
+}
+
+.toggle-button:focus {
+	outline: none;
+}
+
+.toggle-button:active {
+	outline: none;
+}
+
 iframe {
 	width: 100%;
 	border: none;
