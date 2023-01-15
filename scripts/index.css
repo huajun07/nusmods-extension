@@ -1,3 +1,11 @@
+a {
+	color: #ff5138 !important;
+}
+
+a:hover {
+	color: #eb1d00 !important;
+}
+
 .timetable-cell {
 	position: relative;
 }
