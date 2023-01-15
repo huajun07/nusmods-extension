@@ -71,11 +71,15 @@ function addUndoHandlerToButtons() {
 }
 
 function addEditModeButton() {
-	const div = document.getElementsByClassName('page-container')[0].children[0]
-	if (div.children.length > 1) return
+	if(document.getElementsByClassName('edit-switch-wrapper').length > 0) return
+	const div = document.getElementsByClassName('page-container')[0]
+	const header = div.children[0] as HTMLDivElement
+	header.style.display = "flex"
+	const semester = header.children[0] as HTMLDivElement
+	semester.style.flex = "1"
 	const editEnabled = JSON.parse(localStorage.getItem('persist:toggleEditMode') ?? 'true')
 	const wrapper = document.createElement('div')
-	div.appendChild(wrapper)
+	header.appendChild(wrapper)
 	wrapper.className = 'edit-switch-wrapper'
 	wrapper.innerHTML = `<span>Toggle Edit: </span><label class="switch"><input type="checkbox" ${
 		editEnabled ? 'checked' : ''
