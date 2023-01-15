@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Center, Flex, Spacer, Spinner } from '@chakra-ui/react'
-import { ClassSlot, giveSchedule } from '../schedule'
+import { ClassSlot, giveSchedule } from '../services/schedule'
 import { resizeIFrameToFitContent } from '../utils/iframe'
 import { generateUrl } from '../utils/url'
 import { lessonTypeAbbrevToFull } from '../utils/modules'

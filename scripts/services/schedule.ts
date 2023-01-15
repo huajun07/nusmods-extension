@@ -1,15 +1,14 @@
-import { filterModule, getCurrentSemConfigForScheduling, ModuleLesson } from './utils/modules'
+import { filterModule, getCurrentSemConfigForScheduling, ModuleLesson } from '../utils/modules'
 import {
 	getCurrentSem,
-	getCurrentSemConfig,
 	LessonConfig,
 	LESSON_TYPE_ABBREV,
 	ModuleConfig,
-} from './utils/modules'
+} from '../utils/modules'
 
 var taken: boolean[] = Array(910).fill(false)
 var hidden: boolean[] = Array(910).fill(false)
-var blocked: boolean[] = Array(910).fill(false) // TODO: get from AJ
+var blocked: boolean[] = Array(910).fill(false)
 
 type ClassSlot = {
 	moduleCode: string

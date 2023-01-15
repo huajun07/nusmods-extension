@@ -1,16 +1,12 @@
-import hiddenIcon from './assets/hidden_icon.png'
-import fixedIcon from './assets/fixed_icon.png'
-import normalIcon from './assets/normal_icon.png'
-import './index.css'
+import hiddenIcon from '../assets/hidden_icon.png'
+import fixedIcon from '../assets/fixed_icon.png'
+import normalIcon from '../assets/normal_icon.png'
 import {
 	LessonConfig,
-	addFillerModuleToList,
-	addFillerModuleToTimetable,
 	getCurrentSemConfig,
-	getCurrentSemConfigForScheduling,
 	getCurrentSemModules,
 	setCurrentSemConfig,
-} from './utils/modules'
+} from '../utils/modules'
 
 const LESSON_TYPE_ABBREV = {
 	'Design Lecture': 'DLEC',
