@@ -49,6 +49,8 @@ export const filterModule = async (
 	const resData: TimeData[] = await fetchModule(moduleCode, semester)
 	const timeArr: TimeData[] = []
 
+	const moduleConfig: ModuleConfig = getCurrentSemConfigForScheduling()
+
 	const days: string[] = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
 
 	const moduleClasses: ModuleClasses = {
@@ -58,6 +60,9 @@ export const filterModule = async (
 
 	for (const obj of resData) {
 		const { classNo, startTime, endTime, weeks, day, lessonType } = obj
+		if (moduleConfig[moduleCode][lessonType].config == LessonConfig.Fixed) {
+			if (classNo != moduleConfig[moduleCode][lessonType].classNo) continue
+		}
 		const startT: number = Number.parseInt(startTime) / 100 - 8
 		const endT: number = Number.parseInt(endTime) / 100 - 8
 		let dayNum: number = -1
