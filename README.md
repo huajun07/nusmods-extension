@@ -39,6 +39,12 @@ At the time of writing this, the node version is `v19.3.0`
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Tech Stack
+
+- Typescript
+- React
+- Chakra UI
+
 ## Further Extensions:
 
 - Blocking out certain timings
